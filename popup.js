@@ -1,42 +1,38 @@
 let restaurants;
-
+//grab necessary element from HTML
 let changeColor = document.getElementById("changeColor");
 const border = document.querySelector('#border');
 const title = document.querySelector('#title');
 const body = document.querySelector('body');
 const textBoxZip = document.getElementById('zipCode');
 const sendButton = document.getElementById('search');
-const resetButton = document.getElementById('reset');
-
-function reset(){ 
-  
-  document.getElementById('restName').remove();
-  document.getElementById('phoneNum').remove();
-  const newPhoneNum = document.createElement('td');
-  const restResult = document.createElement('td');
-  restResult.setAttribute('id','restName');
-  newPhoneNum.setAttribute('id','phoneNum');
-  document.getElementById('appendSearch').appendChild(restResult);
-  document.getElementById('appendSearch').appendChild(newPhoneNum);
-
-  document.getElementById('prResult').remove(); 
-  document.getElementById('zcResult').remove();
-  const newZcResult = document.createElement('td');
-  const newPrResult = document.createElement('td');
-  newZcResult.setAttribute('id', 'zcResult');
-  newPrResult.setAttribute('id', 'prResult');
-  document.getElementById('appendResult').appendChild(newZcResult);
-  document.getElementById('appendResult').appendChild(newPrResult);
-}
-resetButton.addEventListener('click', reset);
-
 const textBoxPrice = document.getElementById('priceRange');
-sendButton.addEventListener('click', () => {
-  const userInput = textBoxZip.value;
-  fetch(`https://documenu.p.rapidapi.com/restaurants/zip_code/${userInput}?fullmenu=true&page=1`, {
+
+//second arg = appended the new tag with element with this ID
+function tagGenerator (tagName, elementID) {
+  const tag = document.createElement(tagName);
+  document.getElementById(elementID).appendChild(tag);
+  return tag;
+}
+
+function deleteAndCreate (id, appendedTo) {
+  document.getElementById(id).remove();
+  const tag = document.createElement('td');
+  tag.setAttribute('id', id);
+  document.getElementById(appendedTo).appendChild(tag);
+}
+
+function fetchData () {
+  const dollarSignInput = textBoxPrice.value;
+  deleteAndCreate('restName', 'appendSearch');
+  deleteAndCreate('phoneNum', 'appendSearch');
+  deleteAndCreate('zcResult', 'appendResult');
+  deleteAndCreate('prResult', 'appendResult');
+
+  fetch(`https://documenu.p.rapidapi.com/restaurants/zip_code/${textBoxZip.value}?fullmenu=true&page=1`, {
     "method": "GET",
     "headers": {
-      "x-api-key": "979e10c3615fc8cceecc3e172ff0606f",
+      "x-api-key": "b616b93bbfa7137e5006a2798384793b",
       "x-rapidapi-host": "documenu.p.rapidapi.com",
       "x-rapidapi-key": "ba076f7b93msh8e3347cd6aac09bp15401ajsn8b5099fd086b",
     },
@@ -44,9 +40,10 @@ sendButton.addEventListener('click', () => {
   .then(response => response.json())
   .then(data => {
     restaurants = data;
-    priceRange(textBoxPrice.value);
-    zipCode(textBoxZip.value);
-    getName(textBoxPrice.value,textBoxZip.value);
+    const zipTag = tagGenerator('p', 'zcResult');
+    zipTag.innerText = restaurants.data.length;
+    priceRange(dollarSignInput);
+    getName(dollarSignInput);
   })
   .catch(err => {
     console.error(err);
@@ -54,53 +51,41 @@ sendButton.addEventListener('click', () => {
   // priceRange(textBoxPrice.value);
   // zipCode(textBoxZip.value);
   // getName(textBoxPrice.value,textBoxZip.value);
-} );
+}
 
 //Give a total num of restaurant that fit in the criteria
 function priceRange(searchStr){
-  let output = 0;
-  for(let i = 0; i < restaurants.data.length; i++){
-    let cost = restaurants.data[i]["price_range"];
-    if (cost === searchStr) output += 1;
+  const priceTag = tagGenerator('p', 'prResult');
+  if(searchStr === ''){
+    priceTag.innerText = restaurants.data.length;
+  } else {
+    let output = 0;
+    for(let i = 0; i < restaurants.data.length; i++){
+      let cost = restaurants.data[i]["price_range"];
+      if (cost === searchStr) output += 1;
+    }
+    priceTag.innerText = output;
   }
-  const priceTag = document.createElement('p');
-  if(searchStr === ''){priceTag.innerText = restaurants.data.length}
-  else {priceTag.innerText = output}
-  document.getElementById('prResult').appendChild(priceTag);
 }
 
-function zipCode(searchStr) {
-  let output = 0;
-  for(let i = 0; i < restaurants.data.length; i++){
-    let zip = restaurants.data[i].address.postal_code;
-    if(zip === searchStr) output += 1;
-  }
-  const zipTag = document.createElement('p');
-  zipTag.innerText = output;
-  document.getElementById('zcResult').appendChild(zipTag);
-}
-
-function getName (searchStr,zip) {
+function getName (searchStr) {
   let i = 1;
   for (let j = 0; j < restaurants.data.length; j++) {
     const restaurant = restaurants.data[j];
     let cost = restaurant["price_range"];
-    if((searchStr === '' || searchStr === cost) && restaurant.address.postal_code === zip){
-      //     textBoxPrice.setAttribute("value", searchStr)}
-      const tag = document.createElement('p');
+    if(searchStr === '' || searchStr === cost){
+      const tag = tagGenerator('p', 'restName');
       tag.innerText = `${i}. ${restaurant.restaurant_name}`;
-      document.getElementById('restName').appendChild(tag);
 
-      const phoneNum = document.createElement('p');
+      const phoneNum = tagGenerator('p', 'phoneNum');
       phoneNum.innerText = restaurant.restaurant_phone;
-      document.getElementById('phoneNum').appendChild(phoneNum);
       i++;
     }
   }
 }
+sendButton.addEventListener('click', fetchData);
 
-
-// const restaurants = {"data":[ 
+// const restaurants = {"data":[
 //   {
 //     "restaurant_name":"Foo Chow Restaurant",
 //     "restaurant_phone":"(213) 485-1294",

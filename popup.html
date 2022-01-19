@@ -1,10 +1,51 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <h2>Restaurant Power Search Machine</h2>
     <link rel="stylesheet" href="button.css">
   </head>
+  <style>
+    table {
+      min-width: 350px;
+      text-align: justify;
+    }
+  </style>
   <body>
-    <button id="changeColor"></button>
+    <table>
+      <tr>
+        <form>
+          <th>zip code:</th>
+          <th><input id='zipCode' name='zip code' type="text" value = '90012'></th>
+        </form>
+      </tr>
+      <tr>
+        <form>
+          <th>price range:</th>
+          <th><input id='priceRange' name='price range' type="text" value = '$$'></th>
+        </form>
+      </tr>
+    </table>
+    <button id='search'>search</button>
+    <button id='reset'>reset</button>
+    <table>
+      <tr>
+        <th>In This Zip Code</th>
+        <th>In This Price Range</th>
+      </tr>
+      <tr id='appendResult'>
+        <td id='zcResult'></td>
+        <td id='prResult'></td>
+      </tr>
+      <tr>
+        <th>Restaurant Names</th>
+        <th>Phone Number</th>
+      </tr>
+      <tr id='appendSearch'>
+        <td id='restName'></td>
+        <td id='phoneNum'></td>
+      </tr>
+      
+    </table>
     <script src="popup.js"></script>
   </body>
 </html>

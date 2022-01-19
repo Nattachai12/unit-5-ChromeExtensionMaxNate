@@ -1,6 +1,6 @@
 {
-  "name": "Getting Started Example",
-  "description": "Build an Extension!",
+  "name": "Restaurant Power Search Machine",
+  "description": "Find restaurants in your zip code and price range!",
   "version": "1.0",
   "manifest_version": 3,
   "background": {
@@ -10,17 +10,17 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "/images/get_started16.png",
-      "32": "/images/get_started32.png",
-      "48": "/images/get_started48.png",
-      "128": "/images/get_started128.png"
+      "16": "/images/icons8-rack-of-lamb-16.png",
+      "32": "/images/icons8-rack-of-lamb-32.png",
+      "48": "/images/icons8-rack-of-lamb-48.png",
+      "128": "/images/icons8-rack-of-lamb-128.png"
     }
   },
   "icons": {
-    "16": "/images/get_started16.png",
-    "32": "/images/get_started32.png",
-    "48": "/images/get_started48.png",
-    "128": "/images/get_started128.png"
+    "16": "/images/icons8-rack-of-lamb-16.png",
+    "32": "/images/icons8-rack-of-lamb-32.png",
+    "48": "/images/icons8-rack-of-lamb-48.png",
+    "128": "/images/icons8-rack-of-lamb-128.png"
   },
   "options_page": "options.html"
 }
